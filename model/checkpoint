@@ -1,0 +1,2 @@
+model_checkpoint_path: "DTN_CWRU_Data.ckpt"
+all_model_checkpoint_paths: "DTN_CWRU_Data.ckpt"
