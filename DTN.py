@@ -87,10 +87,12 @@ def inference(input_tensor, train, regularizer, reuse, trainable):
 
     with tf.variable_scope('layer5-fc1', reuse=reuse):
         fc1_weights = tf.get_variable("weight", [nodes, FC1_SIZE],
-                                      initializer=tf.truncated_normal_initializer(stddev=0.1))
+                                      initializer=tf.truncated_normal_initializer(stddev=0.1),
+                                      trainable=trainable)
         if regularizer != None:
             tf.add_to_collection('losses', regularizer(fc1_weights))
-        fc1_biases = tf.get_variable('bias', [FC1_SIZE], initializer=tf.constant_initializer(0.1))
+        fc1_biases = tf.get_variable('bias', [FC1_SIZE], initializer=tf.constant_initializer(0.1),
+                                     trainable=trainable)
         fc1 = tf.nn.relu(tf.matmul(reshaped, fc1_weights) + fc1_biases)
         if train:
             fc1 = tf.nn.dropout(fc1, 0.5)
@@ -114,5 +116,5 @@ def inference(input_tensor, train, regularizer, reuse, trainable):
         fc3_biases = tf.get_variable('bias', [NUM_LABELS], initializer=tf.constant_initializer(0.1))
         logit = tf.matmul(fc2, fc3_weights) + fc3_biases
 
-    return fc2, logit
+    return reshaped, fc1, fc2, logit
 
